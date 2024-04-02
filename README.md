@@ -1,2 +1,2 @@
-# AndroidAppliacation
+# AndroidApplication
  
