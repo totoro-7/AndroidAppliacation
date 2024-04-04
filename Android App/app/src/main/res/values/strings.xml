@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Android Appliacation</string>
+    <string name="app_name">Android Application</string>
+    <string name="account">Not yet registered? <font color="#A97429">Sign Up Now</font></string>
 </resources>
