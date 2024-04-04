@@ -1,3 +1,5 @@
+// src/pages/quiz/[id].tsx
+
 import React, { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/router';
 import { db } from '../../firebase';
