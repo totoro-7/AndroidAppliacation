@@ -1,7 +1,8 @@
 // src/pages/index.tsx
 import React, { useState, FormEvent } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase'; // Ensure correct import path
+import { auth } from '../firebase';
+import { useRouter } from 'next/router';
 import '../styles/global.css'; // Import global.css
 import 'tailwindcss/tailwind.css'; // Import Tailwind CSS
 
@@ -9,6 +10,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const signIn = async (e: FormEvent) => {
     e.preventDefault();
@@ -16,14 +18,14 @@ export default function Login() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      window.location.href = '/quiz/quiz-management'; // Adjusted path
+      router.push('/teacherDashboard');
     } catch (err) {
       const error = err as Error;
       setError(error.message);
     }
   };
 
-  // Enhanced UI for teacher login
+  // UI for teacher login
   return (
     <div className="min-h-screen bg-blue-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
