@@ -8,7 +8,7 @@ export type Choice = {
 export type QuizQuestion = {
   id: string;
   questionText: string;
-  choices: Choice[];
+  options: string[];
   correctAnswerIndex: number;
 };
 
