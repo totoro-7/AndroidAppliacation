@@ -23,4 +23,19 @@
 
     <style name="Theme.Splash" parent="Base.Theme.Splash" />
 
+    <style name="Base.Theme.SignUp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/beige</item>
+        <item name="colorPrimaryVariant">@color/brown</item>
+        <item name="colorOnPrimary">@color/beige</item>
+
+        <item name="colorSecondary">@color/Turquoise</item>
+        <item name="colorSecondaryVariant">@color/lightblue</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <item name="android:statusBarColor" tools:targetApi="1">@color/brown</item>
+    </style>
+
+    <style name="Theme.SignUp" parent="Base.Theme.SignUp" />
+
 </resources>
