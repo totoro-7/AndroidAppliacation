@@ -15,6 +15,9 @@
         android:theme="@style/Theme.AndroidAppliacation"
         tools:targetApi="31">
         <activity
+            android:name=".Score_Page"
+            android:exported="false" />
+        <activity
             android:name=".Quiz_Page"
             android:exported="false" />
         <activity
