@@ -2,7 +2,9 @@ package com.example.androidappliacation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,6 +36,16 @@ public class Quiz_Page extends AppCompatActivity {
     int questionCount;
     int questionNumber = 0;
 
+    String userAnswer;
+
+    int userCorrect = 0;
+    int userWrong = 0;
+
+    CountDownTimer countDownTimer;
+    private static final long TOTAL_TIME = 25000;
+    Boolean timerContinue;
+    long leftTime = TOTAL_TIME;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +69,105 @@ public class Quiz_Page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                resetTimer();
                 game();
 
+            }
+        });
+
+        a.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                pauseTimer();
+
+                userAnswer = "0";
+
+                if(quizCorrectAnswer.equals(userAnswer))
+                {
+                    a.setBackgroundResource(R.color.green);
+                    userCorrect++;
+                    correct.setText("" + userCorrect);
+                }
+                else
+                {
+                    a.setBackgroundResource(R.color.red);
+                    userWrong++;
+                    wrong.setText("" + userWrong);
+                    findAnswer();
+                }
+            }
+        });
+
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                pauseTimer();
+
+                userAnswer = "1";
+
+                if(quizCorrectAnswer.equals(userAnswer))
+                {
+                    b.setBackgroundResource(R.color.green);
+                    userCorrect++;
+                    correct.setText("" + userCorrect);
+                }
+                else
+                {
+                    b.setBackgroundResource(R.color.red);
+                    userWrong++;
+                    wrong.setText("" + userWrong);
+                    findAnswer();
+                }
+            }
+        });
+
+        c.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                pauseTimer();
+
+                userAnswer = "2";
+
+                if(quizCorrectAnswer.equals(userAnswer))
+                {
+                    c.setBackgroundResource(R.color.green);
+                    userCorrect++;
+                    correct.setText("" + userCorrect);
+                }
+                else
+                {
+                    c.setBackgroundResource(R.color.red);
+                    userWrong++;
+                    wrong.setText("" + userWrong);
+                    findAnswer();
+                }
+            }
+        });
+
+        d.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                pauseTimer();
+
+                userAnswer = "3";
+
+                if(quizCorrectAnswer.equals(userAnswer))
+                {
+                    d.setBackgroundResource(R.color.green);
+                    userCorrect++;
+                    correct.setText("" + userCorrect);
+                }
+                else
+                {
+                    d.setBackgroundResource(R.color.red);
+                    userWrong++;
+                    wrong.setText("" + userWrong);
+                    findAnswer();
+                }
             }
         });
 
@@ -66,6 +175,13 @@ public class Quiz_Page extends AppCompatActivity {
 
     public void game()
     {
+        startTimer();
+
+        a.setBackgroundResource(R.color.navyblue);
+        b.setBackgroundResource(R.color.navyblue);
+        c.setBackgroundResource(R.color.navyblue);
+        d.setBackgroundResource(R.color.navyblue);
+
         // Read from the database
         databaseReference.addValueEventListener(new ValueEventListener() {
         @Override
@@ -113,5 +229,67 @@ public class Quiz_Page extends AppCompatActivity {
         }
 
     });
+    }
+
+    public void findAnswer()
+    {
+        if (quizCorrectAnswer.equals("0"))
+        {
+            a.setBackgroundResource(R.color.green);
+        }
+        else if (quizCorrectAnswer.equals("1"))
+        {
+            b.setBackgroundResource(R.color.green);
+        }
+        else if (quizCorrectAnswer.equals("2"))
+        {
+            c.setBackgroundResource(R.color.green);
+        }
+        else if (quizCorrectAnswer.equals("3"))
+        {
+            d.setBackgroundResource(R.color.green);
+        }
+    }
+
+    public void startTimer()
+    {
+        countDownTimer = new CountDownTimer(leftTime,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                leftTime = millisUntilFinished;
+                updateCountDownText();
+
+            }
+
+            @Override
+            public void onFinish() {
+
+                timerContinue = false;
+                pauseTimer();
+                question.setText("Time is up!");
+            }
+        }.start();
+
+        timerContinue = true;
+
+    }
+
+    public void resetTimer()
+    {
+        leftTime = TOTAL_TIME;
+        updateCountDownText();
+    }
+
+    public void updateCountDownText()
+    {
+        int second = (int) (leftTime/1000) % 60;
+        time.setText("" + second);
+    }
+
+    public void pauseTimer()
+    {
+        countDownTimer.cancel();;
+        timerContinue = false;
     }
 }
