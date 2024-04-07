@@ -4,6 +4,7 @@ import { FirebaseContext } from '../context/FirebaseContext';
 import { listenToQuizzes } from '../services/quizService';
 import { Quiz } from '../types/quizTypes';
 import { ref, push, set } from 'firebase/database';
+import { getDatabase } from 'firebase/database';
 
 const TeacherDashboard = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
@@ -41,6 +42,8 @@ const TeacherDashboard = () => {
   const startQuizSession = async () => {
     if (!selectedQuizId || !sessionCode) return;
 
+    console.log(`Starting quiz session with ID: ${selectedQuizId} and session code: ${sessionCode}`);
+
     const sessionRef = push(ref(realtimeDb, 'sessions'));
     await set(sessionRef, {
       quizId: selectedQuizId,
@@ -59,9 +62,10 @@ const TeacherDashboard = () => {
 
   const emulateStudentQuiz = () => {
     if (selectedQuizId && sessionCode) {
+      console.log(`Starting quiz session with ID: ${selectedQuizId} and session code: ${sessionCode}`);
       router.push({
-        pathname: '/quizTaking',
-        query: { id: selectedQuizId, sessionCode: sessionCode },
+        pathname: `/quiz/${selectedQuizId}`,
+        query: { sessionCode: sessionCode }, 
       });
     }
   };

@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { realtimeDb } from '../../firebase';
-import { ref, onValue } from 'firebase/database';
+import { getDatabase, ref, onValue, off } from 'firebase/database';
 
 type Choice = {
   text: string;
@@ -27,20 +26,18 @@ export default function QuizDetail() {
   useEffect(() => {
     if (!id) return;
 
+    const realtimeDb = getDatabase();
     const quizRef = ref(realtimeDb, `quizzes/${id}`);
     const unsubscribe = onValue(quizRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        setQuiz({
-          title: data.title,
-          sessionCode: data.sessionCode,
-          questions: data.questions || [],
-        });
+        setQuiz(data);
       }
     });
 
-    return () => unsubscribe();
-  }, [id, realtimeDb]);
+    // Clean up subscription on unmount
+    return () => off(quizRef, 'value', unsubscribe);
+  }, [id]);
 
   if (!quiz) {
     return <div>Loading...</div>;
@@ -48,22 +45,19 @@ export default function QuizDetail() {
 
   return (
     <div>
-      <h1>Quiz Detail: {quiz.title}</h1>
-      <p>Session Code: {quiz.sessionCode}</p>
-      <ul>
-        {quiz.questions.map((question, qIndex) => (
-          <li key={qIndex}>
-            <h3>{question.text}</h3>
-            <ul>
-              {question.choices.map((choice, cIndex) => (
-                <li key={cIndex}>
-                  {choice.text} {cIndex === question.correctAnswerIndex ? "(Correct Answer)" : ""}
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
+      <h1>{quiz.title}</h1>
+      {quiz.questions.map((question, index) => (
+        <div key={index}>
+          <h2>{question.text}</h2>
+          <ul>
+            {question.choices && question.choices.map((choice, cIndex) => (
+              <li key={cIndex}>
+                {choice.text} {cIndex === question.correctAnswerIndex ? "(Correct Answer)" : ""}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 }
