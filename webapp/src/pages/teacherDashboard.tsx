@@ -64,7 +64,7 @@ const TeacherDashboard = () => {
     if (selectedQuizId && sessionCode) {
       console.log(`Starting quiz session with ID: ${selectedQuizId} and session code: ${sessionCode}`);
       router.push({
-        pathname: `/quiz/${selectedQuizId}`,
+        pathname: `/quizTaking/${selectedQuizId}`,
         query: { sessionCode: sessionCode }, 
       });
     }

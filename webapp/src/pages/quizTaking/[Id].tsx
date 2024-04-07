@@ -47,6 +47,10 @@ const QuizPage: React.FC = () => {
     });
   }, [id, sessionCode]);
 
+
+  console.log('Loading:', loading); // Log the value of loading
+  console.log('Quiz data:', quizData); // Log the value of quizData
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -54,6 +58,8 @@ const QuizPage: React.FC = () => {
   if (!quizData) {
     return <div>No quiz data found</div>;
   }
+
+  console.log(quizData); // Log the quizData object
 
   return (
     <div>
