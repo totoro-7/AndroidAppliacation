@@ -2,6 +2,7 @@ package com.example.androidappliacation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -10,6 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +29,10 @@ public class Quiz_Page extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = database.getReference().child("quizzes");
+
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+    FirebaseUser user = auth.getCurrentUser();
+    DatabaseReference databaseReferenceSecond = database.getReference();
 
     String quizQuestion;
     String quizAnswerA;
@@ -63,6 +70,7 @@ public class Quiz_Page extends AppCompatActivity {
 
         next = findViewById(R.id.buttonNext);
 
+
         game();
 
         next.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +79,7 @@ public class Quiz_Page extends AppCompatActivity {
 
                 resetTimer();
                 game();
+                sendScore();
 
             }
         });
@@ -79,15 +88,19 @@ public class Quiz_Page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                String userUID = user.getUid();
+
                 pauseTimer();
 
                 userAnswer = "0";
+                databaseReferenceSecond.child("values").child(quizQuestion).child(userUID).setValue(userAnswer);
 
                 if(quizCorrectAnswer.equals(userAnswer))
                 {
                     a.setBackgroundResource(R.color.green);
                     userCorrect++;
                     correct.setText("" + userCorrect);
+
                 }
                 else
                 {
@@ -103,9 +116,12 @@ public class Quiz_Page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                String userUID = user.getUid();
+
                 pauseTimer();
 
                 userAnswer = "1";
+                databaseReferenceSecond.child("values").child(quizQuestion).child(userUID).setValue(userAnswer);
 
                 if(quizCorrectAnswer.equals(userAnswer))
                 {
@@ -127,9 +143,12 @@ public class Quiz_Page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                String userUID = user.getUid();
+
                 pauseTimer();
 
                 userAnswer = "2";
+                databaseReferenceSecond.child("values").child(quizQuestion).child(userUID).setValue(userAnswer);
 
                 if(quizCorrectAnswer.equals(userAnswer))
                 {
@@ -151,9 +170,12 @@ public class Quiz_Page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                String userUID = user.getUid();
+
                 pauseTimer();
 
                 userAnswer = "3";
+                databaseReferenceSecond.child("values").child(quizQuestion).child(userUID).setValue(userAnswer);
 
                 if(quizCorrectAnswer.equals(userAnswer))
                 {
@@ -216,6 +238,17 @@ public class Quiz_Page extends AppCompatActivity {
             }
             else
             {
+                next.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        sendScore();
+                        Intent i = new Intent(Quiz_Page.this, Score_Page.class);
+                        startActivity(i);
+                        finish();
+
+                    }
+                });
                 Toast.makeText(Quiz_Page.this,"You answered all questions"
                         ,Toast.LENGTH_SHORT).show();
             }
@@ -292,4 +325,14 @@ public class Quiz_Page extends AppCompatActivity {
         countDownTimer.cancel();;
         timerContinue = false;
     }
+
+    public void sendScore()
+    {
+
+        String userUID = user.getUid();
+        databaseReferenceSecond.child("scores").child(userUID).child("correct").setValue(userCorrect);
+        databaseReferenceSecond.child("scores").child(userUID).child("wrong").setValue(userWrong);
+
+    }
+
 }
