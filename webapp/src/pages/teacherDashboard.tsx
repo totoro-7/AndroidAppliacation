@@ -55,7 +55,7 @@ const TeacherDashboard = () => {
 
     setIsSessionActive(true);
     router.push({
-      pathname: '/quizTaking',
+      pathname: '/quizMonitor',
       query: { id: selectedQuizId, sessionCode: sessionCode },
     });
   };
