@@ -77,7 +77,7 @@ const QuizMonitor = () => {
       >
         ← Back to Dashboard
       </button>
-      <h1 className="text-4xl font-bold mb-8 text-center text-gray-900">Quiz Progress Monitor</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-900">Live Quiz Progress Monitor</h1>
       <FlipMove>
         {questionsAndAnswers.map((qna, index) => (
           <div key={qna.userId + qna.question}>
