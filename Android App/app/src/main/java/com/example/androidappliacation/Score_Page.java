@@ -56,7 +56,7 @@ public class Score_Page extends AppCompatActivity {
                 userTotal = Integer.parseInt(userWrong) + Integer.parseInt(userCorrect);
 
                 scoreCorrect.setText("" + userCorrect);
-                scoreTotal.setText("" + userTotal);
+                scoreTotal.setText("5");
 
                 if(Integer.parseInt(userCorrect)> userTotal / 2)
                 {
