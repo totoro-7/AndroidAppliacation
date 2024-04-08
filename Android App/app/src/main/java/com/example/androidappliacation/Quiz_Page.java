@@ -49,7 +49,7 @@ public class Quiz_Page extends AppCompatActivity {
     int userWrong = 0;
 
     CountDownTimer countDownTimer;
-    private static final long TOTAL_TIME = 25000;
+    private static final long TOTAL_TIME = 10000;
     Boolean timerContinue;
     long leftTime = TOTAL_TIME;
 
@@ -81,6 +81,11 @@ public class Quiz_Page extends AppCompatActivity {
                 game();
                 sendScore();
 
+                a.setClickable(true);
+                b.setClickable(true);
+                c.setClickable(true);
+                d.setClickable(true);
+
             }
         });
 
@@ -97,14 +102,14 @@ public class Quiz_Page extends AppCompatActivity {
 
                 if(quizCorrectAnswer.equals(userAnswer))
                 {
-                    a.setBackgroundResource(R.color.green);
+                    a.setBackgroundResource(R.drawable.rounded_correctbox);
                     userCorrect++;
                     correct.setText("" + userCorrect);
 
                 }
                 else
                 {
-                    a.setBackgroundResource(R.color.red);
+                    a.setBackgroundResource(R.drawable.rounded_wrongbox);
                     userWrong++;
                     wrong.setText("" + userWrong);
                     findAnswer();
@@ -125,13 +130,13 @@ public class Quiz_Page extends AppCompatActivity {
 
                 if(quizCorrectAnswer.equals(userAnswer))
                 {
-                    b.setBackgroundResource(R.color.green);
+                    b.setBackgroundResource(R.drawable.rounded_correctbox);
                     userCorrect++;
                     correct.setText("" + userCorrect);
                 }
                 else
                 {
-                    b.setBackgroundResource(R.color.red);
+                    b.setBackgroundResource(R.drawable.rounded_wrongbox);
                     userWrong++;
                     wrong.setText("" + userWrong);
                     findAnswer();
@@ -152,13 +157,13 @@ public class Quiz_Page extends AppCompatActivity {
 
                 if(quizCorrectAnswer.equals(userAnswer))
                 {
-                    c.setBackgroundResource(R.color.green);
+                    c.setBackgroundResource(R.drawable.rounded_correctbox);
                     userCorrect++;
                     correct.setText("" + userCorrect);
                 }
                 else
                 {
-                    c.setBackgroundResource(R.color.red);
+                    c.setBackgroundResource(R.drawable.rounded_wrongbox);
                     userWrong++;
                     wrong.setText("" + userWrong);
                     findAnswer();
@@ -179,13 +184,13 @@ public class Quiz_Page extends AppCompatActivity {
 
                 if(quizCorrectAnswer.equals(userAnswer))
                 {
-                    d.setBackgroundResource(R.color.green);
+                    d.setBackgroundResource(R.drawable.rounded_correctbox);
                     userCorrect++;
                     correct.setText("" + userCorrect);
                 }
                 else
                 {
-                    d.setBackgroundResource(R.color.red);
+                    d.setBackgroundResource(R.drawable.rounded_wrongbox);
                     userWrong++;
                     wrong.setText("" + userWrong);
                     findAnswer();
@@ -199,10 +204,15 @@ public class Quiz_Page extends AppCompatActivity {
     {
         startTimer();
 
-        a.setBackgroundResource(R.color.navyblue);
-        b.setBackgroundResource(R.color.navyblue);
-        c.setBackgroundResource(R.color.navyblue);
-        d.setBackgroundResource(R.color.navyblue);
+        a.setClickable(true);
+        b.setClickable(true);
+        c.setClickable(true);
+        d.setClickable(true);
+
+        a.setBackgroundResource(R.drawable.rounded_ansbox);
+        b.setBackgroundResource(R.drawable.rounded_ansbox);
+        c.setBackgroundResource(R.drawable.rounded_ansbox);
+        d.setBackgroundResource(R.drawable.rounded_ansbox);
 
         // Read from the database
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -268,19 +278,19 @@ public class Quiz_Page extends AppCompatActivity {
     {
         if (quizCorrectAnswer.equals("0"))
         {
-            a.setBackgroundResource(R.color.green);
+            a.setBackgroundResource(R.drawable.rounded_correctbox);
         }
         else if (quizCorrectAnswer.equals("1"))
         {
-            b.setBackgroundResource(R.color.green);
+            b.setBackgroundResource(R.drawable.rounded_correctbox);
         }
         else if (quizCorrectAnswer.equals("2"))
         {
-            c.setBackgroundResource(R.color.green);
+            c.setBackgroundResource(R.drawable.rounded_correctbox);
         }
         else if (quizCorrectAnswer.equals("3"))
         {
-            d.setBackgroundResource(R.color.green);
+            d.setBackgroundResource(R.drawable.rounded_correctbox);
         }
     }
 
@@ -301,6 +311,10 @@ public class Quiz_Page extends AppCompatActivity {
                 timerContinue = false;
                 pauseTimer();
                 question.setText("Time is up!");
+                a.setClickable(false);
+                b.setClickable(false);
+                c.setClickable(false);
+                d.setClickable(false);
             }
         }.start();
 
