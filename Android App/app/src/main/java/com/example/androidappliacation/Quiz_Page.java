@@ -249,7 +249,7 @@ public class Quiz_Page extends AppCompatActivity {
 
                     }
                 });
-                Toast.makeText(Quiz_Page.this,"You answered all questions"
+                Toast.makeText(Quiz_Page.this,"You have reached the last question"
                         ,Toast.LENGTH_SHORT).show();
             }
 

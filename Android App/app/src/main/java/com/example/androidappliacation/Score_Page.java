@@ -61,14 +61,12 @@ public class Score_Page extends AppCompatActivity {
                 if(Integer.parseInt(userCorrect)> userTotal / 2)
                 {
                     scoreCorrect.setTextColor(Color.parseColor("#174d25"));
-                    Toast.makeText(Score_Page.this,"Good job! You've done well"
-                            ,Toast.LENGTH_SHORT).show();
+
                 }
                 else
                 {
                     scoreCorrect.setTextColor(Color.parseColor("#de2316"));
-                    Toast.makeText(Score_Page.this,"Do better"
-                            ,Toast.LENGTH_SHORT).show();
+
                 }
             }
 
