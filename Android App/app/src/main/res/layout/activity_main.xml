@@ -30,6 +30,8 @@
         android:layout_marginBottom="249dp"
         android:backgroundTint="#A97429"
         android:text="Start Quiz"
+        android:textColorHighlight="@color/white"
+        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
