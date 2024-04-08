@@ -1,79 +1,91 @@
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { ref, onValue } from 'firebase/database';
+import { ref, get } from 'firebase/database';
 import { realtimeDb } from '../../firebase';
-import { Quiz } from '../../types/quizTypes';
-import { get } from 'firebase/database'; // import the get function from firebase/database
+import { Quiz, QuizQuestion } from '../../types/quizTypes';
 
-type QuizData = {
-  questions: {
-    question: string;
-    choices: string[];
-  }[];
+type QuizTitles = {
+  [key: string]: string;
 };
 
-async function fetchQuizById(id: string): Promise<Quiz> {
-  const quizRef = ref(realtimeDb, `quizzes/${id}`);
-  const snapshot = await get(quizRef);
-
-  if (!snapshot.exists()) {
-    throw new Error(`No quiz found with id: ${id}`);
-  }
-
-  return snapshot.val() as Quiz;
-}
+// Define the hardcoded quiz titles based on IDs
+const quizTitles: QuizTitles = {
+  quiz1: 'NTU Trivia',
+  quiz2: 'Math Quiz',
+  quiz3: 'Science Quiz',
+};
 
 const QuizPage: React.FC = () => {
   const router = useRouter();
-  const { id, sessionCode } = router.query as { id: string; sessionCode: string };
-  const [quizData, setQuizData] = useState<QuizData | null>(null);
+  const { id } = router.query as { id: string };
+  const [quiz, setQuiz] = useState<Quiz | null>(null);
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!id || !sessionCode) return;
+    if (typeof id === 'string') {
+      const quizRef = ref(realtimeDb, `quizzes/${id}`);
+      get(quizRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data: Quiz = snapshot.val();
+          // Override the title with the hardcoded value if it exists
+          data.title = quizTitles[id] || data.title;
+          setQuiz(data);
+        } else {
+          console.error('No quiz found');
+        }
+        setLoading(false);
+      }).catch((error) => {
+        console.error('Database read failed: ', error);
+        setLoading(false);
+      });
+    }
+  }, [id]);
 
-    fetchQuizById(id).then((quiz: Quiz) => {
-      const quizData: QuizData = {
-        questions: quiz.questions.map((question) => ({
-          question: question.questionText,
-          choices: question.options,
-        })),
-      };
-      setQuizData(quizData);
-      setLoading(false);
-    }).catch((error) => {
-      console.error("Error fetching quiz data:", error);
-      setLoading(false);
-    });
-  }, [id, sessionCode]);
+  const handleSelectAnswer = (questionId: string, optionIndex: number) => {
+    setSelectedAnswers({ ...selectedAnswers, [questionId]: optionIndex });
+  };
 
-
-  console.log('Loading:', loading); // Log the value of loading
-  console.log('Quiz data:', quizData); // Log the value of quizData
+  const isAnswerCorrect = (question: QuizQuestion, selectedOptionIndex: number) => {
+    return question.correctAnswerIndex === selectedOptionIndex;
+  };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="text-center">Loading...</div>;
   }
 
-  if (!quizData) {
-    return <div>No quiz data found</div>;
+  if (!quiz) {
+    return <div className="text-center">Quiz not found.</div>;
   }
-
-  console.log(quizData); // Log the quizData object
 
   return (
-    <div>
-      {quizData.questions.map((question, index) => (
-        <div key={index}>
-          <h2>{question.question}</h2>
-          {question.choices.map((choice, index) => (
-            <div key={index}>
-              <input type="radio" id={`choice-${index}`} name={`question-${index}`} value={choice} />
-              <label htmlFor={`choice-${index}`}>{choice}</label>
-            </div>
-          ))}
-        </div>
-      ))}
+    <div className="container mx-auto my-10 p-5">
+      <h1 className="text-3xl font-bold text-center mb-8">{quiz.title}</h1>
+      <form className="space-y-8">
+        {quiz.questions.map((question) => (
+          <div key={question.id} className="bg-gray-100 p-6 rounded shadow">
+            <h2 className="text-xl font-semibold mb-4">{question.questionText}</h2>
+            {question.options.map((option, index) => (
+              <label key={index} className="flex items-center mb-2">
+                <input
+                  type="radio"
+                  name={`question_${question.id}`}
+                  value={index}
+                  onChange={() => handleSelectAnswer(question.id, index)}
+                  checked={selectedAnswers[question.id] === index}
+                  className="mr-2"
+                />
+                {option}
+              </label>
+            ))}
+            {selectedAnswers[question.id] !== undefined && (
+              <div className={`text-md font-bold ${isAnswerCorrect(question, selectedAnswers[question.id]) ? 'text-green-500' : 'text-red-500'}`}>
+                {isAnswerCorrect(question, selectedAnswers[question.id]) ? 'Correct' : 'Incorrect'}
+              </div>
+            )}
+          </div>
+        ))}
+      </form>
     </div>
   );
 };

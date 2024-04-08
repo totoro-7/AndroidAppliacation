@@ -17,3 +17,13 @@ export type Quiz = {
   title: string;
   questions: QuizQuestion[];
 };
+
+type QuizTitles = {
+  [key: string]: string;
+};
+
+const quizTitles: QuizTitles = {
+  quiz1: 'NTU Trivia',
+  quiz2: 'Math Quiz',
+  quiz3: 'Science Quiz',
+};
